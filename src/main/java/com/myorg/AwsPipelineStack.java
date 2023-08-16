@@ -1,10 +1,14 @@
 package com.myorg;
 
-import software.constructs.Construct;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
-// import software.amazon.awscdk.Duration;
-// import software.amazon.awscdk.services.sqs.Queue;
+import software.amazon.awscdk.pipelines.CodePipeline;
+import software.amazon.awscdk.pipelines.CodePipelineSource;
+import software.amazon.awscdk.pipelines.ShellStep;
+import software.constructs.Construct;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AwsPipelineStack extends Stack {
     public AwsPipelineStack(final Construct scope, final String id) {
@@ -14,11 +18,15 @@ public class AwsPipelineStack extends Stack {
     public AwsPipelineStack(final Construct scope, final String id, final StackProps props) {
         super(scope, id, props);
 
-        // The code that defines your stack goes here
+        List<String> commands = new ArrayList<>();
+        commands.add("mvn package");
+        commands.add("npx cdk synth");
 
-        // example resource
-        // final Queue queue = Queue.Builder.create(this, "AwsPipelineQueue")
-        //         .visibilityTimeout(Duration.seconds(300))
-        //         .build();
+        CodePipeline demoCiCdPipeline = CodePipeline.Builder.create(this, "DemoPipelineId")
+                .synth(ShellStep.Builder.create("Synth")
+                        .input(CodePipelineSource.gitHub("https://github.com/Lehlohonolo-Sehako/aws-pipeline", "main"))
+                        .commands(commands)
+                        .build())
+                .build();
     }
 }
