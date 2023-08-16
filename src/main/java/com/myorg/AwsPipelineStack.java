@@ -24,7 +24,7 @@ public class AwsPipelineStack extends Stack {
 
         CodePipeline demoCiCdPipeline = CodePipeline.Builder.create(this, "DemoPipelineId")
                 .synth(ShellStep.Builder.create("Synth")
-                        .input(CodePipelineSource.gitHub("https://github.com/Lehlohonolo-Sehako/aws-pipeline", "main"))
+                        .input(CodePipelineSource.gitHub("Lehlohonolo-Sehako/aws-pipeline", "main"))
                         .commands(commands)
                         .build())
                 .build();
